@@ -4,6 +4,8 @@ import PokemonForm from './PokemonForm'
 import Search from './Search'
 import { Container } from 'semantic-ui-react'
 
+// for some reason it is giving me errors and I can't figure out why so I have to move on. 
+
 class PokemonPage extends React.Component {
 
   state = {
