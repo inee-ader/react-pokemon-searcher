@@ -4,33 +4,31 @@ import PokemonForm from './PokemonForm'
 import Search from './Search'
 import { Container } from 'semantic-ui-react'
 
-// for some reason it is giving me errors and I can't figure out why so I have to move on. 
-
 class PokemonPage extends React.Component {
 
   state = {
-    pokemon: [],
-    display: [], 
-    searchInput: ''
+    pokemon: [], 
+    display: 0
   }
 
   componentDidMount(){
     fetch('http://localhost:3000/pokemon')
     .then(res => res.json())
-    .then(pokeArr => this.setState({pokemon: pokeArr, display: pokeArr}))
+    .then(pokeArr => this.setState({pokemon: pokeArr}))
   }
 
-  searchPokemon = (e) => {
-    this.setState({searchInput: e.target.value})
-    if(e.target.value === ''){
-      this.setState({display: this.state.pokemon})
-    }else{
-      this.setState({display: this.state.pokemon.filter(pokemon => pokemon.name.includes(e.target.value))})
-    }
+  search = (e) => {
+    // console.log(e.target.value)
+    let filtered; 
+    e.target.value.length ? 
+      filtered = this.state.pokemon.filter(pokemon => pokemon.name.includes(e.target.value)) 
+      : 
+      filtered = 0
+    this.setState({display: filtered})
   }
 
-  handleSubmit = (target) => {
-    const { name, hp, frontUrl, backUrl } = target
+  submit = (target) => {
+    const {name, hp, frontUrl, backUrl} = target
     let newPokemon = {
       name: name.value, 
       hp: hp.value, 
@@ -39,6 +37,7 @@ class PokemonPage extends React.Component {
         back: backUrl.value
       }
     }
+    console.log(newPokemon)
     fetch('http://localhost:3000/pokemon', {
       method: 'POST', 
       headers: {
@@ -47,24 +46,23 @@ class PokemonPage extends React.Component {
       }, 
       body: JSON.stringify(newPokemon)
     })
-      .then(res => res.json())
-      .then(data => {
-        this.setState((prevState) => {
-        return {pokemon: [...data, prevState.pokemon], display: [...data, prevState.display]}
-      })
+    .then(res => res.json())
+    .then(data => {
+      this.setState({pokemon: [data, ...this.state.pokemon]})
     })
   }
 
   render() {
+    const {pokemon, display} = this.state
     return (
       <Container>
         <h1>Pokemon Searcher</h1>
         <br />
-        <PokemonForm form={this.handleSubmit}/>
+        <PokemonForm submit={this.submit}/>
         <br />
-        <Search search={this.searchPokemon} />
+        <Search search={this.search}/>
         <br />
-        <PokemonCollection search={this.searchPokemon} pokemon={this.state.pokemon} filtered={this.state.display} />
+        <PokemonCollection pokemon={display ? display : pokemon} />
       </Container>
     )
   }

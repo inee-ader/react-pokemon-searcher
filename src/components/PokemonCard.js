@@ -6,20 +6,19 @@ class PokemonCard extends React.Component {
   state = {
     front: true
   }
-  
-  toggleCard = () => {
-    this.setState((prevState)=>{
-      return{front: !prevState.front}
-    })
-  }
-    
+
   render() {
-    const {id, name, hp, sprites} = this.props.pokemon
+    const { id, name, hp, sprites } = this.props.pokemon
+
     return (
-      <Card onClick={this.toggleCard} >
-        <div id={id} >
+      <Card >
+        <div id={id}>
           <div className="image">
-            <img src={this.state.front ? sprites.front : sprites.back} alt="oh no!" />
+            <img 
+            onClick={()=> this.setState({front: !this.state.front})} 
+            alt="oh no!" 
+            src={this.state.front ? sprites.front : sprites.back} 
+            />
           </div>
           <div className="content">
             <div className="header">{name}</div>
@@ -27,7 +26,7 @@ class PokemonCard extends React.Component {
           <div className="extra content">
             <span>
               <i className="icon heartbeat red" />
-              {hp}
+              {hp} hp
             </span>
           </div>
         </div>

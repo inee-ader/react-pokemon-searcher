@@ -3,16 +3,17 @@ import { Form } from 'semantic-ui-react'
 
 class PokemonForm extends React.Component {
 
-  submitForm = (e) => {
+  handleSubmit = (e) => {
     e.preventDefault()
-    this.props.form(e.target)
+    this.props.submit(e.target)
+    
   }
 
   render() {
     return (
       <div>
         <h3>Add a Pokemon!</h3>
-        <Form onSubmit={this.submitForm}>
+        <Form onSubmit={this.handleSubmit}>
           <Form.Group widths="equal">
             <Form.Input fluid label="Name" placeholder="Name" name="name" />
             <Form.Input fluid label="hp" placeholder="hp" name="hp" />
